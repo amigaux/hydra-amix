@@ -1,0 +1,84 @@
+--- usr/sys/amiga/driver/Makefile.orig
++++ usr/sys/amiga/driver/Makefile
+@@ -17,7 +17,8 @@
+ 	  slip.o\
+ 	  tiga.o \
+ 	  audio.o \
+-	  aen/exp # kdb/exp
++	  aen/exp \
++	  hydra/exp # kdb/exp
+ 
+ exp :	$(OBJ)
+ 	ld -r -o exp $(OBJ)
+@@ -25,6 +26,9 @@
+ aen/exp :
+ 	cd aen; $(MAKE)
+ 
++hydra/exp :
++	cd hydra; $(MAKE)
++
+ kdb/exp :
+ 	cd kdb; $(MAKE)
+ 
+@@ -33,6 +37,7 @@
+ 	cd as65; $(MAKE) clean
+ 	cd ql65; $(MAKE) clean
+ 	cd aen; $(MAKE) clean
++	cd hydra; $(MAKE) clean
+ 	cd kdb; $(MAKE) clean
+ 
+ ql.o : ql6502.h
+--- usr/sys/master.d/kernel.c.orig
++++ usr/sys/master.d/kernel.c
+@@ -35,7 +35,7 @@
+ #include "kernel.h"
+ 
+ extern void fpuinit(),cinit(),binit(),inoinit(),vfsinit(),finit();
+-extern void strinit(),msginit(),seminit(),sadinit();
++extern void strinit(),msginit(),seminit(),sadinit(),hydrainit();
+ extern void tclinit(),tcoinit(),tcooinit();
+ #ifdef KERNEL_DEBUGGER
+ extern void kdb_init_hooks();
+@@ -58,6 +58,7 @@
+ #ifdef KERNEL_DEBUGGER
+ 	kdb_init_hooks,
+ #endif /* KERNEL_DEBUGGER */
++	hydrainit,
+ 	0};
+ 
+ struct buf pbuf[NPBUF];
+@@ -183,15 +184,14 @@
+ /* head of inet statistics list */
+ int ifstats;
+ 
+-/* Miscellaneous kernel data */
+-
+-extern void aciaaintr(), jbintr(), a2091intr(), a3091intr(), aenintr();
++extern void aciaaintr(), jbintr(), a2091intr(), a3091intr(), aenintr(), hydraintr();
+ void	(*int2_tbl[])() = {
+ 	aciaaintr,		/* ACIAA (parallel/kbd) ISR */
+ 	jbintr,			/* A2090 ISR */
+ 	a2091intr,		/* A2091 ISR */
+ 	a3091intr,		/* A3000 internal SCSI ISR */
+ 	aenintr,		/* A2065 Ethernet ISR */
++	hydraintr,		/* Hydra AmigaNet ISR */
+ 	0};
+ 
+ extern void parinit();
+@@ -263,6 +263,7 @@
+ extern ramopen(),ramclose(),ramstrategy(),ramprint(),ramsize();
+ extern miread();
+ extern struct streamtab aeninfo;
++extern struct streamtab hydrainfo;
+ extern struct streamtab sldinfo;
+ extern struct streamtab loopinfo;
+ 
+@@ -393,7 +394,7 @@
+ ND,ND,ND,ND,ND,ND,ND,ND,ND,ND,notty,nostr,nullflag,		/*45=kdebug*/
+ #endif /* !KERNEL_DEBUGGER */
+ ND,ND,ND,ND,ND,ND,ND,ND,ND,ND,notty,&audioinfo,nullflag,	/*46=audio*/
+-ND,ND,ND,ND,ND,ND,ND,ND,ND,ND,notty,nostr,nullflag,		/*47*/
++ND,ND,ND,ND,ND,ND,ND,ND,ND,ND,notty,&hydrainfo,nullflag,		/*47=hydra*/
+ ND,ND,ND,ND,ND,ND,ND,ND,ND,ND,notty,nostr,nullflag,		/*48*/
+ ND,ND,ND,ND,ND,ND,ND,ND,ND,ND,notty,nostr,nullflag,		/*49*/
+ ND,ND,ND,ND,ND,ND,ND,ND,ND,ND,notty,&sadinfo,nullflag,		/*50=sad*/

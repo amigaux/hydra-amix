@@ -1,6 +1,0 @@
-*#ident	"@(#)kernel:master.d/intp	1.2"
-*
-* SH
-*
-*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
-eorx	-     	  intp	-

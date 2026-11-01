@@ -1,6 +1,0 @@
-*#ident	"@(#)kernel:master.d/ipc	1.1"
-*
-* IPC
-*
-*FLAG	#VEC	PREFIX	SOFT	#DEV	IPL	DEPENDENCIES/VARIABLES
-ox

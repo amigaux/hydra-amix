@@ -1,5 +1,20 @@
 # AMIX Hydra Ethernet Driver
 
+## About this repository
+
+This repository holds the driver only, at the paths it has in the AMIX tree
+(`usr/sys/amiga/driver/hydra/`). The stock AMIX files it builds against are in
+<https://github.com/amigaux/amix-system>. The edits to stock files the driver
+needs (`usr/sys/amiga/driver/Makefile` and `usr/sys/master.d/kernel.c`) are in
+`patches/hydra-integration.patch`. Copy the driver directory into place, then
+apply the patch from the root of the tree (`/` on the Amiga, or the top of an
+amix-system checkout):
+
+```sh
+cd /
+patch -p0 < /path/to/patches/hydra-integration.patch
+```
+
 A STREAMS/DLPI network driver for the **Hydra Systems AmigaNet rev 1.2a** Zorro II Ethernet card (National Semiconductor DP8390/NE2000) for **AMIX 2.1p2**, Commodore's System V Release 4 Unix for the Amiga.
 
 ## Current Status

@@ -1,6 +1,0 @@
-*#ident	"@(#)kernel:master.d/pts	1.1"
-* PTS slave pseudo terminal
-*
-*FLAG   #VEC    PREFIX  SOFT    #DEV    IPL     DEPENDENCIES/VARIABLES
-ofs	-	pts	-        -	-	   PTM
-
